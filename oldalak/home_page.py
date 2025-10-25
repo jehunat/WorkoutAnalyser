@@ -1,5 +1,5 @@
 import streamlit as st
-from data_loader import get_unique_sessions
+from utils.data_loader import get_unique_sessions
 from analysis import total_workout_time, best_week_streak
 import calendar
 from datetime import datetime
