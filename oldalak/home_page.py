@@ -6,8 +6,6 @@ from analysis import total_workout_time, best_week_streak
 from utils.data_loader import get_unique_sessions
 
 
-
-
 def create_calendar(workout_df):
     events = []
 

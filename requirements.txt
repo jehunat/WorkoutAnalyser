@@ -1,6 +1,8 @@
 streamlit
 streamlit-option-menu
+streamlit-calendar
 pandas
+pytz
 matplotlib
 plotly
 numpy
