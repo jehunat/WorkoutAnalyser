@@ -72,6 +72,7 @@ class App:
                     st.session_state.demo_mode = False
                     st.rerun()
 
+            st.markdown("---")
             st.write("Created by Jonatan")
             st.markdown(
                 "[🌐 Portfolio](https://jehunat.github.io/portfolio)",
