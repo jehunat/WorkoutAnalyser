@@ -1,6 +1,6 @@
+import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
 
 
 def total_workout_time(unique_sessions: pd.DataFrame) -> float:

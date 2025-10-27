@@ -1,5 +1,5 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 def weekly_monthly_workout_trend(df: pd.DataFrame, freq: str = 'W'):
