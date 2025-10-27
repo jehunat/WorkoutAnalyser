@@ -20,11 +20,8 @@ class App:
 
         if st.session_state.workout_df is None:
             st.title("📊 Workout Analytics Dashboard")
-            st.write("Töltsd fel az edzésnaplódat vagy próbáld ki a demo adatokkal!")
-            st.write(" ")
 
-            uploaded_file = st.file_uploader("CSV edzés fájl feltöltése:",type="csv")
-            st.write("Vagy demo adat használata:")
+            uploaded_file = st.file_uploader("",type="csv")
             use_demo = st.button("💾 Demo adat betöltése")
 
             if uploaded_file:
@@ -37,7 +34,6 @@ class App:
                 if os.path.exists(demo_path):
                     st.session_state.workout_df = pd.read_csv(demo_path, parse_dates=["start_time", "end_time"])
                     st.session_state.demo_mode = True
-                    #st.session_state.demo_loaded = True
                     st.success("✅ Demo adat betöltve!")
                     st.rerun()
                 else:
@@ -45,10 +41,6 @@ class App:
 
 
         self.workout_df = st.session_state.workout_df
-
-        if self.workout_df is None:
-            st.info("👆 Tölts fel egy CSV fájlt vagy nyomd meg a 'Demo adat betöltése' gombot!")
-            return
 
 
     def show_menu(self):
@@ -80,9 +72,15 @@ class App:
                     st.session_state.demo_mode = False
                     st.rerun()
 
+            st.write("Created by Jonatan")
+            st.markdown(
+                "[🌐 Portfolio](https://jehunat.github.io/portfolio)",
+                unsafe_allow_html=True
+            )
+
     def render_page(self):
         if self.workout_df is None or self.workout_df.empty:
-            st.info("Kérlek töltsd fel a CSV fájlodat a megjelenítéshez.")
+            st.info("👆 Tölts fel egy CSV fájlt az edzésedről vagy próbáld ki demo adatokkal!")
             return
 
         if self.selected_page == "Főoldal":
