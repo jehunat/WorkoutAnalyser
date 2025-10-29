@@ -7,7 +7,20 @@ from utils.data_loader import get_unique_sessions
 
 
 def create_calendar(workout_df):
-    events = []
+    """ Interactive calendar"""
+
+    st.write("**💡Tipp:** A zöld napokon edzettél.")
+    st.write("Kattints egy napra, hogy megnézd az aznapi edzéseidet! 💪")
+
+    workout_days = workout_df['start_time'].dt.date.unique()
+
+    workout_events = []
+    for date in workout_df["start_time"].dt.date.unique():
+        workout_events.append({
+            "start": str(date),
+            "display": "background",
+            "color": "#7CFC00"
+        })
 
     calendar_options = {
         "initialView": "dayGridMonth",
@@ -21,7 +34,7 @@ def create_calendar(workout_df):
     }
 
     state = calendar(
-        events=events,
+        events=workout_events,
         options=calendar_options,
         custom_css="""
                 .fc-toolbar-title {
@@ -40,16 +53,17 @@ def create_calendar(workout_df):
         clicked_dt_local = clicked_dt_utc.astimezone(local_tz)
         clicked_date = clicked_dt_local.date()
 
-        day_df = workout_df[workout_df['start_time'].dt.date == clicked_date]
 
-        if not day_df.empty:
-            st.write(f"Edzések {clicked_date}-án:")
-            for title, group in day_df.groupby('title'):
+
+        workouts_for_day  = workout_df[workout_df['start_time'].dt.date == clicked_date]
+
+        if not workouts_for_day.empty:
+            st.write(f"Edzés {clicked_date}-án:")
+            for title, group in workouts_for_day.groupby('title'):
                 st.write(f"**{title}**")
                 st.table(group[['exercise_title', 'weight_kg', 'reps']])
         else:
             st.write("Ezen a napon nem volt edzés.")
-        st.success(f"👋 Helló! Ezt a napot választottad: **{clicked_date}**")
 
 
 def render_home(workout_df):
