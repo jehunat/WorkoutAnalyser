@@ -75,53 +75,13 @@ def calculate_weekly_streak(df, min_workouts_per_week=4):
     return streak
 
 
-def session_volume_analysis(workout_df):
-    st.subheader("📊 Gyakorlat Session Volumen Statisztika")
-
-    exercise_list = workout_df['exercise_title'].unique()
-    selected_exercise = st.selectbox("Válassz gyakorlatot:", exercise_list)
-
-    period_option = st.radio("Időszak:", ["Elmúlt 3 hónap", "Elmúlt 1 év", "Minden idő"])
-    now = pd.Timestamp.now()
-
-    if period_option == "Elmúlt 3 hónap":
-        cutoff = now - pd.DateOffset(months=3)
-    elif period_option == "Elmúlt 1 év":
-        cutoff = now - pd.DateOffset(years=1)
-    else:
-        cutoff = pd.Timestamp.min
-
-    # Csak a kiválasztott gyakorlat és normál szettek
-    df = workout_df[
-        (workout_df['exercise_title'] == selected_exercise) &
-        (workout_df['set_type'] == 'normal') &
-        (workout_df['start_time'] >= cutoff)
-        ].copy()
-
-    if df.empty:
-        st.warning("Nincs adat a kiválasztott gyakorlatra ebben az időszakban.")
-        return
-
-    # Session ID: minden edzés egyedi dátum/idő
-    df['session_id'] = df['start_time'].dt.strftime('%Y-%m-%d %H:%M:%S')
-
-    # Session volumen = összes súly × ismétlés egy edzésen
-    session_volume = df.groupby('session_id').apply(lambda x: (x['weight_kg'] * x['reps']).sum())
-    session_volume = session_volume.sort_index()
-
-    # Diagram
-    fig, ax = plt.subplots(figsize=(10, 4))
-    ax.bar(session_volume.index, session_volume.values, color='skyblue', edgecolor='black')
-    ax.set_xlabel("Edzés dátuma")
-    ax.set_ylabel("Session volumen (kg×reps)")
-    ax.set_title(f"{selected_exercise} – Session volumen")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    st.pyplot(fig)
-
-
 def heaviest_weight_per_session(workout_df):
     st.subheader("🏋️‍♂️ Heaviest weight sessionenként (warmup kizárva)")
+    st.markdown("""
+    Itt láthatod, hogy az adott gyakorlatban **milyen maximális súlyt** használtál minden edzésen.  
+    Ez segít megfigyelni, hogyan alakul a **nyers erőfejlődésed** idővel – ha a súlyok fokozatosan nőnek, az nagyon jó jel.  
+    ⚠️ A **bemelegítő (warmup) szettek nem számítanak bele**.
+    """)
 
     exercise_list = workout_df['exercise_title'].unique()
     selected_exercise = st.selectbox("Válassz gyakorlatot a heaviest weight diagramhoz:", exercise_list, key="heaviest_weight_exercise")
@@ -168,6 +128,11 @@ def heaviest_weight_per_session(workout_df):
 
 def total_reps_per_session(workout_df):
     st.subheader("🏋️‍♂️ Összes ismétlés sessionenként (warmup kizárva)")
+    st.markdown("""
+    Ez a diagram azt ábrázolja, hogy egy-egy edzésen hány **összes ismétlést** végeztél az adott gyakorlatból.  
+    Ha az ismétlésszám növekszik, az arra utalhat, hogy **több szettet vagy hosszabb edzést** végzel, vagy jobban bírod a terhelést.  
+    ⚠️ A **bemelegítő (warmup) szettek nem számítanak bele**.
+    """)
 
     exercise_list = workout_df['exercise_title'].unique()
     selected_exercise = st.selectbox("Válassz gyakorlatot a total reps diagramhoz:", exercise_list, key="total_reps_exercise")
@@ -214,6 +179,11 @@ def total_reps_per_session(workout_df):
 
 def best_set_volume_analysis(workout_df):
     st.subheader("🏋️‍♂️ Legjobb szett volumene sessionenként")
+    st.markdown("""
+    Ez az ábra a **legjobb szettjeidet** mutatja minden edzésről – vagyis azt, amelyikben a legnagyobb volt a *súly × ismétlés* szorzat.  
+    Ezzel nyomon követheted, hogyan változik a **csúcsteljesítményed** az adott gyakorlatban idővel.  
+    ⚠️ A **bemelegítő (warmup) szettek nem számítanak bele**.
+    """)
 
     exercise_list = workout_df['exercise_title'].unique()
     selected_exercise = st.selectbox("Válassz gyakorlatot a best set volumenhez:", exercise_list, key="best_set_exercise")
@@ -262,6 +232,12 @@ def best_set_volume_analysis(workout_df):
 
 def session_volume_analysis(workout_df):
     st.subheader("📊 Gyakorlat Session Volumen Statisztika")
+    st.markdown("""
+    Ez a diagram azt mutatja, hogy **egy-egy edzés során összesen mekkora terhelést végeztél** az adott gyakorlatból.  
+    A volumen a *súly × ismétlésszám* értékből számolódik, tehát jól jelzi, **mekkora munkát végeztél** az edzéseken.  
+    ⚠️ A **bemelegítő (warmup) szettek nem számítanak bele**.
+    Ha növekvő trendet látsz, az azt jelenti, hogy **fejlődik az edzésintenzitásod vagy a terhelésed**.
+    """)
 
     exercise_list = workout_df['exercise_title'].unique()
     selected_exercise = st.selectbox("Válassz gyakorlatot:", exercise_list)
