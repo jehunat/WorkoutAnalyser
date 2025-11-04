@@ -2,42 +2,25 @@ name: Wake Streamlit App
 
 on:
   schedule:
-    - cron: "0 6 * * *"  # minden nap reggel 7:00 magyar idő szerint
+    - cron: "0 6 * * *"
   workflow_dispatch:
 
 jobs:
   wake:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check and wake Streamlit app
+      - name: Kód klónozása
+        uses: actions/checkout@v4
+
+      - name: Python beállítása
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Playwright telepítése
         run: |
-          APP_URL="https://workout-analyser.streamlit.app"
-
-          echo "🔍 Checking if the app is sleeping..."
-          PAGE_CONTENT=$(curl -s -L "$APP_URL")
-
-          # Ellenőrzés: alszik-e az app
-          if echo "$PAGE_CONTENT" | grep -q "get this app back up"; then
-            echo "💤 App is sleeping — waking up..."
-            python3 - <<'EOF'
-import asyncio
-from playwright.async_api import async_playwright
-
-async def wake():
-    url = "https://workout-analyser.streamlit.app"  # <-- IDE is a saját URL-edet
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
-        await page.goto(url)
-        # Rákattint a "Yes, get this app back up!" gombra
-        await page.click('button[data-testid="wakeup-button-owner"]')
-        await asyncio.sleep(5)
-        print("✅ App should be waking up now!")
-        await browser.close()
-
-asyncio.run(wake())
-EOF
-          else
-            echo "✅ App already running, no action needed."
-          fi
+          pip install playwright
+          playwright install --with-deps firefox
+      - name: Streamlit app ébresztése
+        run: |
+          python wake_streamlit.py
