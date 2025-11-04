@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check and wake Streamlit app
         run: |
-          APP_URL="https://workout-analyser.streamlit.app/"
+          APP_URL="https://workout-analyser.streamlit.app"
 
           echo "🔍 Checking if the app is sleeping..."
           PAGE_CONTENT=$(curl -s -L "$APP_URL")
@@ -25,7 +25,7 @@ import asyncio
 from playwright.async_api import async_playwright
 
 async def wake():
-    url = "https://your-app-name.streamlit.app"  # <-- IDE is a saját URL-edet
+    url = "https://workout-analyser.streamlit.app"  # <-- IDE is a saját URL-edet
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
