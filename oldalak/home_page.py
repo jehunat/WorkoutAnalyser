@@ -4,6 +4,7 @@ import streamlit as st
 from streamlit_calendar import calendar
 from analysis import total_workout_time, best_week_streak
 from utils.data_loader import get_unique_sessions
+import numpy as np
 
 
 def create_calendar(workout_df):
@@ -73,6 +74,15 @@ def render_home(workout_df):
     total_hours = total_workout_time(unique_sessions)
     total_workouts = unique_sessions.shape[0]
     first_workout = unique_sessions['start_time'].min().strftime("%Y-%m-%d %H:%M")
+    total_duration_seconds = int(unique_sessions['duration'].mean().total_seconds())
+    hours = total_duration_seconds // 3600
+    minutes = (total_duration_seconds % 3600) // 60
+
+    times = workout_df['start_time'].dt.hour + workout_df['start_time'].dt.minute / 60
+    avg_time = np.mean(times)
+
+    avg_hour = int(avg_time)
+    avg_minute = int((avg_time - avg_hour) * 60)
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("⏱ Összes edzésidő", f"{total_hours:.2f} óra")
@@ -80,6 +90,10 @@ def render_home(workout_df):
     col3.metric("🏁 Legelső edzés", f"{first_workout}")
     best_streak = best_week_streak(workout_df, min_days_per_week=4)
     col4.metric("🔥 Best week streak", f"{best_streak} hét")
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("⏳ Átlagos edzésidő", f"{hours} óra {minutes} perc")
+    col2.metric("🕒 Átlagos edzéskezdés", f"{avg_hour:02d}:{avg_minute:02d}")
 
     st.subheader("Adatok előnézete")
     st.dataframe(workout_df.head(10))
