@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check and wake Streamlit app
         run: |
-          APP_URL="https://your-app-name.streamlit.app"  # <-- IDE írd be a saját app URL-edet
+          APP_URL="https://workout-analyser.streamlit.app/"
 
           echo "🔍 Checking if the app is sleeping..."
           PAGE_CONTENT=$(curl -s -L "$APP_URL")
