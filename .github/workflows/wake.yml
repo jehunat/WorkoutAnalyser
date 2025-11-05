@@ -1,0 +1,26 @@
+name: Wake Streamlit App
+
+on:
+  schedule:
+    - cron: "0 */4 * * *"
+  workflow_dispatch:
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kód klónozása
+        uses: actions/checkout@v4
+
+      - name: Python beállítása
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Playwright telepítése
+        run: |
+          pip install playwright
+          playwright install --with-deps firefox
+      - name: Streamlit app ébresztése
+        run: |
+          python wake_streamlit.py
