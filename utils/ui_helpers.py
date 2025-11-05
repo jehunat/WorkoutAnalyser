@@ -2,8 +2,6 @@ import streamlit as st
 
 def render_intro_text():
     st.markdown("""
-    ## Üdv a Workout Analytics Dashboardban! 💪  
-
     Ez az alkalmazás segít **elemezni az edzésnaplódat** és vizualizálni a fejlődésedet.  
     Töltsd fel a saját edzésnaplódat `.csv` formátumban, vagy próbáld ki a **demo adatokat**!
 
